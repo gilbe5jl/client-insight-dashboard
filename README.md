@@ -30,5 +30,5 @@ A full-stack customer analytics dashboard built with React and Flask. Designed t
 Clone the repo:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/client-insights-dashboard.git
+git clone https://github.com/gilbe5jl/client-insight-dashboard.git
 cd client-insights-dashboard
