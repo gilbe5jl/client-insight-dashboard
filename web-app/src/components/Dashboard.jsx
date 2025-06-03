@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import MetricsPanel from './MetricsPanel';
 import ChartPanel from './ChartPanel';
-import CustomerCard from './CustomerCard';
+// import CustomerCard from './CustomerCard';
 import dummyData from '../data/dummyData';
 import CustomerTable from './CutomerTable';
 export default function Dashboard() {
@@ -28,7 +28,7 @@ export default function Dashboard() {
       </div>
       <MetricsPanel />
       <ChartPanel />
-      <CustomerCard data={dummyData[0]} />
+      {/* <CustomerCard data={dummyData[0]} /> */}
         <CustomerTable data={dummyData} />
     </div>
   );

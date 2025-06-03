@@ -9,7 +9,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    for _ in range(30):
+    for _ in range(90):
         c = Customer(
             customer_id=fake.unique.bothify(text='CUST####'),
             name=fake.company(),
