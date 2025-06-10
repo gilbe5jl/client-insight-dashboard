@@ -56,16 +56,16 @@ def get_customers():
     customers = Customer.query.all()
     result = [
         {
-            "id": c.customer_id,
+            "id": c.id,
             "name": c.name,
             "region": c.region,
             "status": c.status,
             "revenue": c.revenue,
-            "satisfactionScore": c.satisfaction_score,
-            "metrics": {
-                "purchases": c.purchases,
-                "avgSpend": c.avg_spend
-            }
+            # "satisfactionScore": c.satisfaction_score,
+            # "metrics": {
+                # "purchases": c.purchases,
+                # "avgSpend": c.avg_spend
+            # }
         } for c in customers
     ]
     return jsonify(result), 200

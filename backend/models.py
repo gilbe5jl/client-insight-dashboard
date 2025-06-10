@@ -7,9 +7,9 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     region = db.Column(db.String(50))
-    revenue = db.Column(db.Float)
     status = db.Column(db.String(20))
-    join_date = db.Column(db.DateTime, default=datetime.utcnow)
+    revenue = db.Column(db.Float)
+    join_date = db.Column(db.DateTime, default=datetime.now)
 
     notes = db.relationship('CustomerNote', backref='customer', lazy=True)
     purchases = db.relationship('Purchase', backref='customer', lazy=True)

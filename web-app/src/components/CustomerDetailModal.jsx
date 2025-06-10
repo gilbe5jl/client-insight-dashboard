@@ -4,33 +4,43 @@ export default function CustomerDetailModal({ customer, onClose }) {
   const [notes, setNotes] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [newNote, setNewNote] = useState('');
+  const purchaseCount = Array.isArray(purchases) ? purchases.length : 0;
+  const avgSpend = purchaseCount > 0
+  ? (purchases.reduce((sum, p) => sum + p.amount, 0) / purchaseCount)
+  : 0;
+useEffect(() => {
+  if (!customer || !customer.id) return;
 
-  useEffect(() => {
-    if (!customer) return;
-    // Fetch notes and purchases for selected customer
-    fetch(`http://localhost:5001/api/customers/${customer.id}/notes`)
-      .then(res => res.json())
-      .then(data => setNotes(data));
-
-    fetch(`http://localhost:5001/api/customers/${customer.id}/purchases`)
-      .then(res => res.json())
-      .then(data => setPurchases(data));
-  }, [customer]);
-
-  const handleAddNote = () => {
-    if (!newNote.trim()) return;
-    fetch(`http://localhost:5001/api/customers/${customer.id}/notes`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ note: newNote })
+  fetch(`http://localhost:5001/api/customers/${customer.id}/notes`)
+    .then(res => res.ok ? res.json() : [])
+    .then(data => {
+      console.log("Fetched notes:", data); // ✅ add this line
+      setNotes(data);
     })
-      .then(res => res.json())
-      .then(data => {
-        setNotes([...notes, data]);
-        setNewNote('');
-      });
-  };
+    .catch(() => setNotes([]));
 
+  fetch(`http://localhost:5001/api/customers/${customer.id}/purchases`)
+    .then(res => res.ok ? res.json() : [])
+    .then(data => setPurchases(data))
+    .catch(() => setPurchases([]));
+}, [customer]);
+
+const handleAddNote = () => {
+  if (!newNote.trim() || !customer?.id) return;
+
+  fetch(`http://localhost:5001/api/customers/${customer.id}/notes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ note: newNote })
+  })
+    .then(res => res.json())
+    .then(data => {
+      setNotes([...notes, data]);
+      setNewNote('');
+    })
+    .catch(err => console.error("Failed to add note:", err));
+};
+console.log("Posting note for customer:", customer?.id, newNote);
   if (!customer) return null;
 
   return (
@@ -50,8 +60,10 @@ export default function CustomerDetailModal({ customer, onClose }) {
             <p><strong>Region:</strong> {customer.region}</p>
             <p><strong>Status:</strong> {customer.status}</p>
             <p><strong>Revenue:</strong> ${customer.revenue.toLocaleString()}</p>
-            <p><strong>Purchases:</strong> {customer.metrics?.purchases}</p>
-            <p><strong>Avg Spend:</strong> ${customer.metrics?.avgSpend.toLocaleString()}</p>
+            {/* <p><strong>Purchases:</strong> {customer.metrics?.purchases}</p> */}
+            <p><strong>Purchases:</strong> {purchaseCount}</p>
+            {/* <p><strong>Avg Spend:</strong> ${customer.metrics?.avgSpend.toLocaleString()}</p> */}
+            <p><strong>Avg Spend:</strong> ${avgSpend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             <p><strong>Satisfaction:</strong> {customer.metrics?.satisfactionScore}/5</p>
           </div>
 
