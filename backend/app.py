@@ -50,6 +50,59 @@ def handle_purchases(customer_id):
         'item': p.item
     } for p in purchases])
 
+from flask import request
+from models import Customer, db
+
+@app.route("/api/customers", methods=["POST"])
+def create_customer():
+    data = request.get_json()
+
+    # Basic validation
+    required_fields = ["name", "region", "revenue", "status"]
+    for field in required_fields:
+        if field not in data or not str(data[field]).strip():
+            return {"error": f"'{field}' is required."}, 400
+
+    # try:
+    #     # revenue = float(data["revenue"])
+
+    #     if revenue < 0:
+    #         return {"error": "Revenue must be a positive number."}, 400
+    # except ValueError:
+    #     return {"error": "Revenue must be a number."}, 400
+    revenue_raw = data.get("revenue")
+    if revenue_raw is None:
+        return {"error": "Revenue is required."}, 400
+    try:
+        revenue = float(revenue_raw)
+        if revenue < 0:
+            return {"error": "Revenue must be a positive number."}, 400
+    except (ValueError, TypeError):
+        return {"error": "Revenue must be a valid number."}, 400
+
+    # Create and commit
+    new_customer = Customer(
+        name=data["name"].strip(),
+        region=data["region"].strip(),
+        revenue=revenue,
+        status=data["status"].strip()
+    )
+
+    db.session.add(new_customer)
+    db.session.commit()
+
+    return {
+        "id": new_customer.id,
+        "name": new_customer.name,
+        "region": new_customer.region,
+        "revenue": new_customer.revenue,
+        "status": new_customer.status
+    }, 201
+
+
+
+
+
 @app.route("/api/metrics", methods=["GET"])
 def get_metrics():
     """
