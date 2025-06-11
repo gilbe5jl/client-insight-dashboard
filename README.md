@@ -67,8 +67,8 @@ python seed.py
 # Start Flask server
 python app.py
 
-Username: testuser
-Password: testpass
+Username: admin
+Password: password123
 
 client-insights-dashboard/
 ├── backend/
