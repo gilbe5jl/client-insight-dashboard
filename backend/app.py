@@ -50,6 +50,40 @@ def handle_purchases(customer_id):
         'item': p.item
     } for p in purchases])
 
+@app.route("/api/metrics", methods=["GET"])
+def get_metrics():
+    """
+    Returns key business metrics for the dashboard UI.
+
+    - total_customers: Count of all customer records in the database.
+    Useful for tracking user base growth.
+
+    - monthly_revenue: Sum of all purchases made during the current calendar month.
+    Calculated by filtering purchases where the purchase date falls within the current month and year.
+    Helps track recent sales performance.
+    The total dollar amount of all purchases made in the current calendar month
+    - avg_spend: Average amount spent per purchase across all customers.
+    Calculated as the total sum of all purchase amounts divided by the number of purchases.
+    Useful for understanding typical purchase value and customer behavior.
+    """
+    total_customers = Customer.query.count()
+
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    monthly_revenue = db.session.query(db.func.sum(Purchase.amount)) \
+        .filter(db.extract('month', Purchase.date) == current_month) \
+        .filter(db.extract('year', Purchase.date) == current_year) \
+        .scalar() or 0
+
+    all_purchases = Purchase.query.all()
+    total_revenue = sum(p.amount for p in all_purchases)
+    avg_spend = total_revenue / len(all_purchases) if all_purchases else 0
+
+    return jsonify({
+        "total_customers": total_customers,
+        "monthly_revenue": round(monthly_revenue, 2),
+        "avg_spend": round(avg_spend, 2),
+    }), 200
 
 @app.route("/api/customers", methods=["GET"])
 def get_customers():

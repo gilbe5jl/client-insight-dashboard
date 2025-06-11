@@ -7,6 +7,8 @@ import ChartPanel from './ChartPanel';
 // import CustomerCard from './CustomerCard';
 import dummyData from '../data/dummyData';
 import CustomerTable from './CutomerTable';
+
+
 export default function Dashboard() {
   const { logout } = useAuth();
   const navigate = useNavigate();
