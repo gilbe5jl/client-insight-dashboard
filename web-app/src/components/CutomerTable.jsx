@@ -173,8 +173,10 @@ const highlightMatch = (text, query) => {
                       {c.status}
                     </span>
                   </td>
-                  <td className="px-4 py-2">{c.metrics?.purchases}</td>
-                  <td className="px-4 py-2">${c.metrics?.avgSpend?.toLocaleString()}</td>
+                  <td className="px-4 py-2">{c.purchases}</td>
+                  {/* <td className="px-4 py-2">{c.avgSpend}</td> */}
+                  <td className="px-4 py-2">${c.avg_spend ? c.avg_spend.toLocaleString() : '—'}</td>
+                   {/* <td className="px-4 py-2">${avgSpend.toLocaleString()}</td> */}
                   <td className="px-4 py-2">{c.metrics?.satisfactionScore}/5</td>
                 </tr>
               ))

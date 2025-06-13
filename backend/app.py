@@ -154,20 +154,23 @@ def get_metrics():
 @app.route("/api/customers", methods=["GET"])
 def get_customers():
     customers = Customer.query.all()
-    result = [
-        {
+    result = []
+    for c in customers:
+        purchases = c.purchases
+        total_spent = sum(p.amount for p in purchases)
+        purchase_count = len(purchases)
+        avg_spend = total_spent / purchase_count if purchase_count else 0
+
+        result.append({
             "id": c.id,
             "name": c.name,
             "region": c.region,
             "status": c.status,
             "revenue": c.revenue,
-            # "satisfactionScore": c.satisfaction_score,
-            # "metrics": {
-                # "purchases": c.purchases,
-                # "avgSpend": c.avg_spend
-            # }
-        } for c in customers
-    ]
+            "purchases": purchase_count,
+            "avg_spend": round(avg_spend, 2),
+        })
+
     return jsonify(result), 200
 
 @app.route("/api/login", methods=["POST", "OPTIONS"])

@@ -1,13 +1,9 @@
-//Main page after login: charts, filters, tables.
-//Main layout after login; will contain MetricsPanel, ChartPanel, and CustomerList
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import MetricsPanel from './MetricsPanel';
 import ChartPanel from './ChartPanel';
 // import CustomerCard from './CustomerCard';
-import dummyData from '../data/dummyData';
 import CustomerTable from './CutomerTable';
-
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -19,7 +15,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div
+      className="min-h-screen bg-fixed bg-cover bg-no-repeat p-4 space-y-6"
+      style={{ backgroundImage: "url('/bg.svg')" }}
+    >
       <div className="flex justify-end">
         <button
           onClick={handleLogout}
@@ -31,7 +30,7 @@ export default function Dashboard() {
       <MetricsPanel />
       <ChartPanel />
       {/* <CustomerCard data={dummyData[0]} /> */}
-        <CustomerTable data={dummyData} />
+      <CustomerTable />
     </div>
   );
 }
