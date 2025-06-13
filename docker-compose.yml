@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  backend:
+    build: ./backend
+    container_name: client-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5001
+    restart: unless-stopped
+
+  frontend:
+    build: ./web-app
+    container_name: client-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
