@@ -16,9 +16,6 @@ A full-stack customer analytics dashboard built with **React** and **Flask**. Th
 
 ---
 ![Demo](assets/demo.gif)
-## 📸 Screenshot
-
-![Client Insights Dashboard Preview](./assets/dashboard-preview.png)
 
 <h3>📸 Dashboard Snapshots</h3>
 
