@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token
 from models import db, Customer, CustomerNote, Purchase
 from datetime import datetime
+from collections import defaultdict
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///customers.db'
@@ -17,6 +18,18 @@ jwt = JWTManager(app)
 users = {
     "admin": "password123"
 }
+
+
+@app.route("/api/sales_summary", methods=["GET"])
+def sales_summary():
+    summary = defaultdict(float)
+    for purchase in Purchase.query.all():
+        label = purchase.date.strftime("%b %Y")
+        summary[label] += purchase.amount
+
+    # sort by date label
+    sorted_items = sorted(summary.items(), key=lambda x: datetime.strptime(x[0], "%b %Y"))
+    return jsonify([{ "month": k, "revenue": round(v, 2) } for k, v in sorted_items])
 
 
 @app.route('/api/customers/<int:customer_id>/notes', methods=['GET', 'POST'])
