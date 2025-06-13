@@ -15,7 +15,7 @@ A full-stack customer analytics dashboard built with **React** and **Flask**. Th
 - 🌐 CORS-compatible across Safari, Firefox, and Chrome
 
 ---
-
+![Demo](assets/demo.gif)
 ## 📸 Screenshot
 
 ![Client Insights Dashboard Preview](./assets/dashboard-preview.png)
