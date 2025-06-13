@@ -20,6 +20,13 @@ A full-stack customer analytics dashboard built with **React** and **Flask**. Th
 
 ![Client Insights Dashboard Preview](./assets/dashboard-preview.png)
 
+<h3>📸 Dashboard Snapshots</h3>
+
+<p float="left">
+  <img src="./assets/dashboard-view.png" width="45%" />
+  <img src="./assets/modal-view.png" width="45%" />
+</p>
+
 ## 🧱 Tech Stack
 
 | Frontend               | Backend              | Utilities / Infra       |
