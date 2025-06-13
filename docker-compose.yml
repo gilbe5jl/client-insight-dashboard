@@ -1,22 +1,29 @@
-version: '3.9'
-
 services:
   backend:
     build: ./backend
     container_name: client-backend
     ports:
       - "5001:5001"
+    volumes:
+      - ./backend:/app
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_RUN_PORT=5001
+      - FLASK_ENV=development
     restart: unless-stopped
 
   frontend:
     build: ./web-app
     container_name: client-frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
+    volumes:
+      - ./web-app:/app
+      - /app/node_modules    # prevent local node_modules from overwriting container's
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # fix for file watching in some host setups
+    command: npm start
     depends_on:
       - backend
     restart: unless-stopped

@@ -104,9 +104,16 @@ const highlightMatch = (text, query) => {
   if (error) return <p className="text-sm text-red-600">Error: {error}</p>;
 
   return (
+        <div className="bg-white bg-opacity-10 p-4 rounded-lg shadow-md hover:shadow-lg transition">
+
     <div className="space-y-4">
       <CustomerDetailModal customer={selectedCustomer} onClose={() => setSelectedCustomer(null)} />
-  <button onClick={() => setShowModal(true)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+  <button onClick={() => setShowModal(true)} className="bg-emerald-600 text-white px-6 py-2 rounded-xl shadow-md 
+           border border-emerald-700 font-semibold tracking-wide 
+           hover:bg-emerald-500 hover:shadow-lg hover:scale-105 
+           focus:outline-none focus:ring-4 focus:ring-emerald-300 
+           active:scale-95 transition duration-200 ease-in-out 
+           bg-gradient-to-br from-emerald-600 to-emerald-700">
         + Add Customer
       </button>
       <div className="flex justify-between items-center">
@@ -116,8 +123,10 @@ const highlightMatch = (text, query) => {
           placeholder="Search by name or ID..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-1/2 p-2 border border-gray-300 rounded"
-        />
+className="w-1/2 p-2 border border-gray-300 rounded transition duration-200 ease-in-out 
+           hover:border-blue-400 
+           focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+           focus:outline-none"        />
         <select value={rowsPerPage} onChange={e => setRowsPerPage(Number(e.target.value))} className="p-2 border rounded">
           {[5, 10, 25].map(n => <option key={n} value={n}>{n} per page</option>)}
         </select>
@@ -148,18 +157,29 @@ const highlightMatch = (text, query) => {
 
       <div className="overflow-x-auto bg-white shadow rounded-lg p-4">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Region</th>
-              <th className="px-4 py-2 cursor-pointer" onClick={() => requestSort('revenue')}>Revenue</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Purchases</th>
-              <th className="px-4 py-2">Avg Spend</th>
-              <th className="px-4 py-2 cursor-pointer" onClick={() => requestSort('satisfaction')}>Satisfaction</th>
-            </tr>
-          </thead>
+         <thead>
+          <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            {[
+              { key: 'id', label: 'ID' },
+              { key: 'name', label: 'Name' },
+              { key: 'region', label: 'Region' },
+              { key: 'revenue', label: 'Revenue' },
+              { key: 'status', label: 'Status' },
+              { key: 'purchases', label: 'Purchases' },
+              { key: 'avg_spend', label: 'Avg Spend' },
+              { key: 'satisfaction', label: 'Satisfaction' }
+            ].map(col => (
+              <th
+                key={col.key}
+                className="px-4 py-2 cursor-pointer select-none hover:underline"
+                onClick={() => requestSort(col.key)}
+              >
+                {col.label}{' '}
+                {sortConfig.key === col.key && (sortConfig.direction === 'asc' ? '▲' : '▼')}
+              </th>
+            ))}
+          </tr>
+        </thead>
           <tbody className="divide-y divide-gray-100 text-sm">
             {paginated.length > 0 ? (
               paginated.map((c, i) => (
@@ -193,9 +213,10 @@ const highlightMatch = (text, query) => {
 
       <div className="flex justify-between items-center">
         <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">Previous</button>
-        <p className="text-sm text-gray-600">Page {currentPage} of {Math.ceil(filtered.length / rowsPerPage)}</p>
+        <p className="text-sm text-white">Page {currentPage} of {Math.ceil(filtered.length / rowsPerPage)}</p>
         <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === Math.ceil(filtered.length / rowsPerPage)} className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">Next</button>
       </div>
+    </div>
     </div>
   );
 }

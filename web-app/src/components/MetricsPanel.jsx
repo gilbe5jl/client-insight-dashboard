@@ -8,6 +8,8 @@ export default function MetricsPanel() {
     satisfaction: 4.5, // Placeholder until backend supports it
   });
 
+  const [collapsed, setCollapsed] = useState(false);
+
   useEffect(() => {
     fetch('http://localhost:5001/api/metrics')
       .then(res => {
@@ -24,23 +26,34 @@ export default function MetricsPanel() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div className="bg-white p-4 rounded shadow text-center">
-        <h3 className="text-sm text-gray-500">Total Customers</h3>
-        <p className="text-xl font-bold">{metrics.total_customers}</p>
-      </div>
-      <div className="bg-white p-4 rounded shadow text-center">
-        <h3 className="text-sm text-gray-500">Monthly Revenue</h3>
-        <p className="text-xl font-bold">${metrics.monthly_revenue.toLocaleString()}</p>
-      </div>
-      <div className="bg-white p-4 rounded shadow text-center">
-        <h3 className="text-sm text-gray-500">Avg Spend</h3>
-        <p className="text-xl font-bold">${metrics.avg_spend.toLocaleString()}</p>
-      </div>
-      <div className="bg-white p-4 rounded shadow text-center">
-        <h3 className="text-sm text-gray-500">Satisfaction</h3>
-        <p className="text-xl font-bold">{metrics.satisfaction} / 5</p>
-      </div>
+    <div className="bg-white bg-opacity-10 p-4 rounded-lg shadow-md hover:shadow-lg transition">
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="mb-2 text-sm text-white hover:text-yellow-300 hover:scale-105 focus:ring focus:outline-none transition"
+      >
+        {collapsed ? 'Show▼' : 'Hide▲'}
+      </button>
+
+      {!collapsed && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h3 className="text-sm text-gray-500">Total Customers</h3>
+            <p className="text-3xl font-semibold text-blue-700">{metrics.total_customers}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h3 className="text-sm text-gray-500">Monthly Revenue</h3>
+            <p className="text-3xl font-semibold text-green-700">${metrics.monthly_revenue.toLocaleString()}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h3 className="text-sm text-gray-500">Avg Spend</h3>
+            <p className="text-3xl font-semibold text-black-700">${metrics.avg_spend.toLocaleString()}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h3 className="text-sm text-gray-500">Satisfaction</h3>
+            <p className="text-3xl font-semibold text-black-700">⭐⭐⭐⭐ ½</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
