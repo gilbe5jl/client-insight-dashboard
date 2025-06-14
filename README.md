@@ -1,7 +1,6 @@
 # Client Insights Dashboard
 
-A full-stack customer analytics dashboard built with **React** and **Flask**. This app showcases modern frontend design, backend data handling, and real-time business insights — great for internal use or as a polished portfolio project.
-
+A full-stack customer analytics dashboard built with **React** and **Flask**. This app features modern frontend design, backend data handling, and real-time business insights.
 ---
 
 ## ✨ Features
