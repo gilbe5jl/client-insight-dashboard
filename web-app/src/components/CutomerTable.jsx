@@ -57,6 +57,32 @@ const highlightMatch = (text, query) => {
     const dir = (sortConfig.key === key && sortConfig.direction === 'asc') ? 'desc' : 'asc';
     setSortConfig({ key, direction: dir });
   };
+const handleDelete = () => {
+  const selectedIds = filtered.filter(c => c.selected).map(c => c.id);
+  if (selectedIds.length === 0) {
+    alert('Please select at least one customer to delete.');
+    return;
+  }
+  if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} customer(s)?`)) return;
+  fetch('http://localhost:5001/api/customers', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids: selectedIds })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to delete customers');
+      return res.json();
+    })
+    .then(() => {
+      setCustomers(prev => prev.filter(c => !selectedIds.includes(c.id)));
+      setFiltered(prev => prev.filter(c => !selectedIds.includes(c.id)));
+      setCurrentPage(1);
+    })
+    .catch(err => {
+      console.error("❌ Error deleting customers:", err);
+      setError('Failed to delete customers');
+    });
+};
 
   const sortedData = [...filtered].sort((a, b) => {
     const { key, direction } = sortConfig;
@@ -108,6 +134,7 @@ const highlightMatch = (text, query) => {
 
     <div className="space-y-4">
       <CustomerDetailModal customer={selectedCustomer} onClose={() => setSelectedCustomer(null)} />
+<div className="flex items-center gap-3 mb-4">
   <button onClick={() => setShowModal(true)} className="bg-emerald-600 text-white px-6 py-2 rounded-xl shadow-md 
            border border-emerald-700 font-semibold tracking-wide 
            hover:bg-emerald-500 hover:shadow-lg hover:scale-105 
@@ -116,6 +143,14 @@ const highlightMatch = (text, query) => {
            bg-gradient-to-br from-emerald-600 to-emerald-700">
         + Add Customer
       </button>
+  <button
+    onClick={handleDelete}
+    className="p-2 rounded-full hover:bg-red-100 transition active:scale-90"
+    title="Delete selected"
+  >
+    <img src="/trash-icon.png" alt="Delete" className="w-16 h-16 object-contain" />
+  </button>
+</div>
       <div className="flex justify-between items-center">
         {/* // Search and pagination controls  */}
         <input
@@ -211,11 +246,31 @@ className="w-1/2 p-2 border border-gray-300 rounded transition duration-200 ease
         </table>
       </div>
 
-      <div className="flex justify-between items-center">
-        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">Previous</button>
-        <p className="text-sm text-white">Page {currentPage} of {Math.ceil(filtered.length / rowsPerPage)}</p>
-        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === Math.ceil(filtered.length / rowsPerPage)} className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">Next</button>
-      </div>
+     <div className="flex justify-center items-center gap-4 mt-4">
+  <button
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    disabled={currentPage === 1}
+    className="px-4 py-2 rounded-l bg-gray-100 border border-gray-300 text-sm font-medium text-gray-700 
+               hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 
+               disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    ◀ Previous
+  </button>
+
+  <span className="text-sm text-white">
+    Page {currentPage} of {Math.ceil(filtered.length / rowsPerPage)}
+  </span>
+
+  <button
+    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+    disabled={currentPage === Math.ceil(filtered.length / rowsPerPage)}
+    className="px-4 py-2 rounded-r bg-gray-100 border border-gray-300 text-sm font-medium text-gray-700 
+               hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 
+               disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    Next ▶
+  </button>
+</div>
     </div>
     </div>
   );
